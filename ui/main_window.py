@@ -31,7 +31,9 @@ class MainWindow(QMainWindow):
         # Allow interactive resizing (default behavior)
         # Ensure scroll bars appear when needed
         self.tree_view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.tree_view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded) # Add vertical policy
+        self.tree_view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        # Prevent last column stretching to ensure horizontal scrollbar appears correctly
+        self.tree_view.header().setStretchLastSection(False) 
         layout.addWidget(self.tree_view)
 
         self.parsed_data: ParsedPLMXMLData | None = None # Store parsed data
@@ -134,10 +136,11 @@ class MainWindow(QMainWindow):
             # --- End Format detailed dataset info ---
 
 
-            # Make items non-editable
+            # Make items non-editable but selectable and enabled
             # Add type_item to the list
             for item in [name_item, type_item, rev_item, qty_item, attr_item, dataset_item]:
-                item.setEditable(False)
+                # item.setEditable(False) # Flags override this
+                item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
                 # Store the occurrence object on the first item for potential future use
                 if item == name_item:
                      item.setData(occ, Qt.ItemDataRole.UserRole + 1)
