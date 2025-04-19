@@ -1,6 +1,6 @@
 # Python PLMXML Viewer
 
-A simple desktop application for Windows to view the structure and data within PLMXML files, inspired by Krusty84/PLMXMLViewer for macOS.
+A simple desktop application for Windows to view the structure and data within Teamcenter PLMXML files, inspired by Krusty84/PLMXMLViewer for macOS. Has not been extensively tested, but works well with ConfiguredDataFilesExportDefault transfer mode PLMXML files.
 
 ## Features
 
