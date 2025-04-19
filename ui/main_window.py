@@ -24,14 +24,14 @@ class MainWindow(QMainWindow):
         # --- Tree View for BOM ---
         self.tree_view = QTreeView()
         self.tree_model = QStandardItemModel()
-        # Define column headers
-        self.column_headers = ["Name / ID", "Revision", "Qty", "Attributes", "Datasets"]
+        # Define column headers (add "Item Type")
+        self.column_headers = ["Name / ID", "Item Type", "Revision", "Qty", "Attributes", "Datasets"]
         self.tree_model.setHorizontalHeaderLabels(self.column_headers)
         self.tree_view.setModel(self.tree_model)
-        # self.tree_view.setHeaderHidden(False) # Keep header visible
         # Allow interactive resizing (default behavior)
-        # Ensure horizontal scroll bar appears when needed
+        # Ensure scroll bars appear when needed
         self.tree_view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.tree_view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded) # Add vertical policy
         layout.addWidget(self.tree_view)
 
         self.parsed_data: ParsedPLMXMLData | None = None # Store parsed data
@@ -95,6 +95,7 @@ class MainWindow(QMainWindow):
         for occ in occurrences:
             # Create items for each column
             name_item = QStandardItem(occ.displayName or occ.name or occ.id or 'Occurrence')
+            type_item = QStandardItem(occ.subType or "N/A") # Add Item Type item
             rev_item = QStandardItem(occ.revision or "N/A")
             qty_item = QStandardItem(occ.quantity or "1") # Default quantity to 1 if not specified
 
@@ -134,14 +135,15 @@ class MainWindow(QMainWindow):
 
 
             # Make items non-editable
-            for item in [name_item, rev_item, qty_item, attr_item, dataset_item]:
+            # Add type_item to the list
+            for item in [name_item, type_item, rev_item, qty_item, attr_item, dataset_item]:
                 item.setEditable(False)
                 # Store the occurrence object on the first item for potential future use
                 if item == name_item:
                      item.setData(occ, Qt.ItemDataRole.UserRole + 1)
 
-            # Append the row of items
-            parent_item.appendRow([name_item, rev_item, qty_item, attr_item, dataset_item])
+            # Append the row of items (add type_item)
+            parent_item.appendRow([name_item, type_item, rev_item, qty_item, attr_item, dataset_item])
 
             # Recursively populate children
             if occ.subOccurrences:
